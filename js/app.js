@@ -20,40 +20,50 @@ function cargarNombre(e) {
 
   // if origin true add to url
   if (originSelected !== '') {
-    url += `?region=${originSelected}&`;
+    url += `region=${originSelected}&`;
   }
 
   // if gender true add to url
   if (genderSelected !== '') {
-    url += `?gender=${genderSelected}&`;
+    url += `gender=${genderSelected}&`;
   }
 
   // if quantity true add to url
   if (quantity !== '') {
-    url += `?amount=${quantity}&`;
+    url += `amount=${quantity}&`;
   }
 
-  // Inizializzare XMLHTTPRequest
+  console.log(url);
+
+
+  //init XMLHTTPRequest
   const xhr = new XMLHttpRequest();
 
-  xhr.open('GET', url);
+  //open
+  xhr.open('GET', url, true);
 
-  xhr.onload(function () {
+  // template
+  xhr.onload = function () {
     if (this.status === 200) {
-      const names = JSON.parse(this.resposteText);
+      const names = JSON.parse(this.responseText);
 
-      //Generare HTML
-      let htmlNames = '<h2>Nomi Generati</h2>';
+      //Generate HTML
+      let htmlNames = '<h2>Name generated</h2>';
 
-      htmlNames *= '<ul class="lista"> </ul>';
+      htmlNames += '<ul class="lista">';
 
       names.forEach(function (name) {
         htmlNames += `
-          <li></li>
+          <li>${name.name}</li>
         `;
       })
+
+      htmlNames += '</ul>'
+
+      document.getElementById('resultado').innerHTML = htmlNames;
     }
-  })
+  }
 
   xhr.send()
+
 }
