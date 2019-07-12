@@ -1,69 +1,59 @@
-document.querySelector('#generar-nombre').addEventListener('submit', cargarNombre);
+const formNameGenerator = document.getElementById('name-generator');
+formNameGenerator.addEventListener('submit', loadName);
 
-//chiamata a Ajax e stampare risultati
-function cargarNombre(e) {
-  e.preventDefault();
+function loadName(e) {
+  e.preventDefault;
 
-  //leggere le variabili
-  const origin = document.getElementById('origen');
-  const originSelected = origin.options[origin.selectedIndex].value;
+  const country = document.getElementById('country');
+  const countrySelected = country.options[country.selectedIndex].value;
 
-  const gender = document.getElementById('genero');
+  const gender = document.getElementById('gender');
   const genderSelected = gender.options[gender.selectedIndex].value;
 
-  const quantity = document.getElementById('numero').value;
+  const quantity = document.getElementById('number').value;
 
-  console.log(quantity);
+  const apiNameGenerator = 'http://uinames.com/api/?';
 
+  // costruction url
   let url = '';
-  url += 'http:/uinames.com/api/?';
-
-  // if origin true add to url
-  if (originSelected !== '') {
-    url += `region=${originSelected}&`;
+  url += apiNameGenerator;
+  
+  if (countrySelected !== ''){
+    url += `region=${countrySelected}&`;
   }
 
-  // if gender true add to url
-  if (genderSelected !== '') {
-    url += `gender=${genderSelected}&`;
+  if (genderSelected !== ''){
+    url += `region=${genderSelected}&`;
   }
 
-  // if quantity true add to url
-  if (quantity !== '') {
+  if (quantity !== ''){
     url += `amount=${quantity}&`;
   }
 
-  console.log(url);
-
-
-  //init XMLHTTPRequest
+  // init XMLHttpRequest
   const xhr = new XMLHttpRequest();
-
-  //open
   xhr.open('GET', url, true);
 
-  // template
-  xhr.onload = function () {
-    if (this.status === 200) {
+  // create template
+  xhr.onload = function(){
+    if(this.status === 200){
+      // convert text to Json
       const names = JSON.parse(this.responseText);
 
-      //Generate HTML
-      let htmlNames = '<h2>Name generated</h2>';
+      htmlTemplate = '<ul>';
 
-      htmlNames += '<ul class="lista">';
-
-      names.forEach(function (name) {
-        htmlNames += `
-          <li>${name.name}</li>
-        `;
+      names.forEach(function(name){
+        htmlTemplate += `
+          <li>${name.name} </li>
+        `
       })
 
-      htmlNames += '</ul>'
+      htmlTemplate += '</ul>';
 
-      document.getElementById('resultado').innerHTML = htmlNames;
+      let result = document.getElementById('result');
+      result.innerHTML = htmlTemplate;
     }
   }
 
-  xhr.send()
-
+  xhr.send();  
 }
